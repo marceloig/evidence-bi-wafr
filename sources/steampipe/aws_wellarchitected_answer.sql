@@ -1,0 +1,1 @@
+select workload_id, question_id, question_title, risk, pillar_id, lens_alias, choices from aws_wellarchitected_answer

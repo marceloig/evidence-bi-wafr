@@ -1,0 +1,8 @@
+# This file was automatically generated
+name: steampipe
+type: postgres
+options:
+  database: steampipe
+  host: maestro-LoadBalancer-28adfee17f357979.elb.us-east-1.amazonaws.com
+  port: 9193
+  schema: solvimm_wellarchitected

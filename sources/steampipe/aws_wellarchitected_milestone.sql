@@ -1,0 +1,1 @@
+select workload_id, milestone_name, milestone_number, recorded_at, region from aws_wellarchitected_milestone

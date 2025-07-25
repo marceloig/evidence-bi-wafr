@@ -1,0 +1,7 @@
+# This file was automatically generated
+name: csv
+type: csv
+options:
+  filename: aws_wellarchitected_question_choices.csv
+  delimiter: ','
+  quotechar: '"'
