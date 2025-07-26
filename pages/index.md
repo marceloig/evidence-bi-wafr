@@ -1,5 +1,5 @@
 ---
-title: Well-Architected Framework Review Report - Overview
+title: WAFR Overview
 description: Overview of AWS Well-Architected Framework Review.
 ---
 <Grid cols=3>

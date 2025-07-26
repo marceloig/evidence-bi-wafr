@@ -1,5 +1,6 @@
 ---
-title: Well-Architected Framework Review Report - Benchmark
+title: WAFR Benchmark
+description: Benchmark AWS Well-Architected Framework (WAFR) workloads.
 ---
 
 ```sql questions_overview_risk
