@@ -1,32 +1,14 @@
 ---
 title: Overview
-description: Overview of the pillars in AWS Well-Architected Framework Review.
+description: Overview of AWS Well-Architected Framework Review.
 ---
 <Grid cols=3>
-<Link 
-    url="pillars/operationalExcellence"
-    label="Operational Excellence"
-/>
-<Link 
-    url="pillars/security"
-    label="Security"
-/>
-<Link 
-    url="pillars/reliability"
-    label="Reliability"
-/>
-<Link 
-    url="pillars/performance"
-    label="Performance Efficiency"
-/>
-<Link 
-    url="pillars/costOptimization"
-    label="Cost Optimization"
-/>
-<Link 
-    url="pillars/sustainability"
-    label="Sustainability"
-/>
+<BigLink url='pillars/operationalExcellence'>Operational Excellence</BigLink>
+<BigLink url='pillars/security'>Security</BigLink>
+<BigLink url='pillars/reliability'>Reliability</BigLink>
+<BigLink url='pillars/performance'>Performance Efficiency</BigLink>
+<BigLink url='pillars/costOptimization'>Cost Optimization</BigLink>
+<BigLink url='pillars/sustainability'>Sustainability</BigLink>
 </Grid>
 
 ```sql workload
@@ -46,6 +28,7 @@ where a.lens_alias = 'wellarchitected'
     value=workload_id
     label=workload_name
 />
+<Info description="Workload" />
 
 ```sql questions_overview_risk
 select 
@@ -73,14 +56,28 @@ order by a.risk
 
 <ECharts config={
     {
-        tooltip: {
-            formatter: '{b}: {c} ({d}%)'
-        },
+      toolbox: {
+        show: true,
+        feature: {
+          saveAsImage: {
+            show: true,
+            title: 'Save as Image',
+            type: 'png',  // 'png', 'jpeg', 'svg'
+            name: 'pie-chart',  // filename
+          }
+        }
+      },
+      tooltip: {
+          formatter: '{b}: {c}'
+      },
       series: [
         {
           type: 'pie',
           radius: ['40%', '70%'],
           data: [...questions_overview_risk],
+          label: {
+            formatter: '{b}: ({d}%)'  // Show only the value
+          }
         }
       ]
       }

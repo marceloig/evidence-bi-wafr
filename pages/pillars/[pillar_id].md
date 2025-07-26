@@ -44,14 +44,28 @@ order by a.risk
 
 <ECharts config={
     {
-        tooltip: {
-            formatter: '{b}: {c} ({d}%)'
-        },
+      toolbox: {
+        show: true,
+        feature: {
+          saveAsImage: {
+            show: true,
+            title: 'Save as Image',
+            type: 'png',  // 'png', 'jpeg', 'svg'
+            name: 'pie-chart',  // filename
+          }
+        }
+      },
+      tooltip: {
+          formatter: '{b}: {c}'
+      },
       series: [
         {
           type: 'pie',
           radius: ['40%', '70%'],
           data: [...questions_overview_risk],
+          label: {
+            formatter: '{b}: ({d}%)'  // Show only the value
+          }
         }
       ]
       }

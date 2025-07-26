@@ -27,14 +27,28 @@ order by a.risk
 
 <ECharts config={
     {
+      toolbox: {
+        show: true,
+        feature: {
+          saveAsImage: {
+            show: true,
+            title: 'Save as Image',
+            type: 'png',  // 'png', 'jpeg', 'svg'
+            name: 'pie-chart',  // filename
+          }
+        }
+      },
       tooltip: {
-          formatter: '{b}: {c} ({d}%)'
+          formatter: '{b}: {c}'
       },
       series: [
         {
           type: 'pie',
           radius: ['40%', '70%'],
-          data: [...questions_overview_risk]
+          data: [...questions_overview_risk],
+          label: {
+            formatter: '{b}: ({d}%)'  // Show only the value
+          }
         }
       ]
       }
@@ -111,14 +125,28 @@ group by risk
           text: 'Operacional Excellence',
           left: 'center'
         },
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: {
+              show: true,
+              title: 'Save as Image',
+              type: 'png',  // 'png', 'jpeg', 'svg'
+              name: 'pie-chart',  // filename
+            }
+          }
+        },
         tooltip: {
-            formatter: '{b}: {c} ({d}%)'
+            formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
             radius: ['40%', '70%'],
             data: [...questions_overview_operacionalExcellence],
+            label: {
+              formatter: '{b}: ({d}%)'  // Show only the value
+            }
           }
         ]
       }
@@ -130,14 +158,28 @@ group by risk
           text: 'Security',
           left: 'center'
         },
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: {
+              show: true,
+              title: 'Save as Image',
+              type: 'png',  // 'png', 'jpeg', 'svg'
+              name: 'pie-chart',  // filename
+            }
+          }
+        },
         tooltip: {
-            formatter: '{b}: {c} ({d}%)'
+            formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
             radius: ['40%', '70%'],
             data: [...questions_overview_security],
+            label: {
+              formatter: '{b}: ({d}%)'  // Show only the value
+            }
           }
         ]
       }
@@ -170,14 +212,28 @@ group by risk
           text: 'Reliability',
           left: 'center'
         },
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: {
+              show: true,
+              title: 'Save as Image',
+              type: 'png',  // 'png', 'jpeg', 'svg'
+              name: 'pie-chart',  // filename
+            }
+          }
+        },
         tooltip: {
-            formatter: '{b}: {c} ({d}%)'
+            formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
             radius: ['40%', '70%'],
             data: [...questions_overview_reliability],
+            label: {
+              formatter: '{b}: ({d}%)'  // Show only the value
+            }
           }
         ]
       }
@@ -189,14 +245,28 @@ group by risk
           text: 'Performance Efficiency',
           left: 'center'
         },
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: {
+              show: true,
+              title: 'Save as Image',
+              type: 'png',  // 'png', 'jpeg', 'svg'
+              name: 'pie-chart',  // filename
+            }
+          }
+        },
         tooltip: {
-            formatter: '{b}: {c} ({d}%)'
+            formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
             radius: ['40%', '70%'],
             data: [...questions_overview_performance],
+            label: {
+              formatter: '{b}: ({d}%)'  // Show only the value
+            }
           }
         ]
       }
@@ -238,14 +308,28 @@ order by name
           text: 'Cost Optimization',
           left: 'center'
         },
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: {
+              show: true,
+              title: 'Save as Image',
+              type: 'png',  // 'png', 'jpeg', 'svg'
+              name: 'pie-chart',  // filename
+            }
+          }
+        },
         tooltip: {
-            formatter: '{b}: {c} ({d}%)'
+            formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
             radius: ['40%', '70%'],
             data: [...questions_overview_costOptimization],
+            label: {
+              formatter: '{b}: ({d}%)'  // Show only the value
+            }
           }
         ]
       }
