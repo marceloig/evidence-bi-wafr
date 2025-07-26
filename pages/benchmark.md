@@ -27,6 +27,10 @@ order by a.risk
 
 <ECharts config={
     {
+      title: {
+        text: 'Total Risk',
+        left: 'left'
+      },
       toolbox: {
         show: true,
         feature: {
@@ -122,8 +126,8 @@ group by risk
   <ECharts config={
       {
         title: {
-          text: 'Operacional Excellence',
-          left: 'center'
+          text: 'Total Risk - Operacional Excellence',
+          left: 'left'
         },
         toolbox: {
           show: true,
@@ -136,16 +140,21 @@ group by risk
             }
           }
         },
+        legend: {
+          show: true,
+          bottom: 'left',
+        },
         tooltip: {
             formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['25%', '50%'],  // Smaller pie radius
+            center: ['50%', '50%'],
             data: [...questions_overview_operacionalExcellence],
             label: {
-              formatter: '{b}: ({d}%)'  // Show only the value
+              formatter: '{d}%',  // Show only the value
             }
           }
         ]
@@ -155,8 +164,8 @@ group by risk
   <ECharts config={
       {
         title: {
-          text: 'Security',
-          left: 'center'
+          text: 'Total Risk - Security',
+          left: 'left'
         },
         toolbox: {
           show: true,
@@ -169,16 +178,21 @@ group by risk
             }
           }
         },
+        legend: {
+          show: true,
+          bottom: 'left',
+        },
         tooltip: {
             formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['25%', '50%'],  // Smaller pie radius
+            center: ['50%', '50%'],
             data: [...questions_overview_security],
             label: {
-              formatter: '{b}: ({d}%)'  // Show only the value
+              formatter: '{d}%'  // Show only the value
             }
           }
         ]
@@ -209,8 +223,8 @@ group by risk
   <ECharts config={
       {
         title: {
-          text: 'Reliability',
-          left: 'center'
+          text: 'Total Risk - Reliability',
+          left: 'left'
         },
         toolbox: {
           show: true,
@@ -223,16 +237,21 @@ group by risk
             }
           }
         },
+        legend: {
+          show: true,
+          bottom: 'left',
+        },
         tooltip: {
             formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['25%', '50%'],  // Smaller pie radius
+            center: ['50%', '50%'],
             data: [...questions_overview_reliability],
             label: {
-              formatter: '{b}: ({d}%)'  // Show only the value
+              formatter: '{d}%'  // Show only the value
             }
           }
         ]
@@ -242,8 +261,8 @@ group by risk
   <ECharts config={
       {
         title: {
-          text: 'Performance Efficiency',
-          left: 'center'
+          text: 'Total Risk - Performance Efficiency',
+          left: 'left'
         },
         toolbox: {
           show: true,
@@ -256,16 +275,21 @@ group by risk
             }
           }
         },
+        legend: {
+          show: true,
+          bottom: 'left',
+        },
         tooltip: {
             formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['25%', '50%'],  // Smaller pie radius
+            center: ['50%', '50%'],
             data: [...questions_overview_performance],
             label: {
-              formatter: '{b}: ({d}%)'  // Show only the value
+              formatter: '{d}%'  // Show only the value
             }
           }
         ]
@@ -284,20 +308,31 @@ group by risk
 ```
 
 ```sql questions_overview_sustainability
-select 
-  risk as name, 
-  count(*) as value
-from ${questions_overview_pillar_id}
-where pillar_id = 'sustainability'
-group by risk
-
-union all
-
-select 
-  'High Risk' as name,
-  0 as value
-
-order by name
+WITH default_risks AS (
+  SELECT * FROM (VALUES 
+    ('High Risk', 0),
+    ('Medium Risk', 0),
+    ('Resolved', 0)
+  ) AS t(name, value)
+),
+actual_counts AS (
+  select risk as name, count(*) as value 
+  from ${questions_overview_pillar_id}
+  where pillar_id = 'sustainability' 
+  group by risk
+)
+SELECT 
+  dr.name,
+  COALESCE(ac.value, dr.value) as value
+FROM default_risks dr
+LEFT JOIN actual_counts ac ON dr.name = ac.name
+ORDER BY 
+  CASE dr.name
+    WHEN 'High Risk' THEN 1
+    WHEN 'Medium Risk' THEN 2
+    WHEN 'Resolved' THEN 3
+    ELSE 4
+  END
 
 ```
 
@@ -305,8 +340,8 @@ order by name
   <ECharts config={
       {
         title: {
-          text: 'Cost Optimization',
-          left: 'center'
+          text: 'Total Risk - Cost Optimization',
+          left: 'left'
         },
         toolbox: {
           show: true,
@@ -319,16 +354,21 @@ order by name
             }
           }
         },
+        legend: {
+          show: true,
+          bottom: 'left',
+        },
         tooltip: {
             formatter: '{b}: {c}'
         },
         series: [
           {
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['25%', '50%'],  // Smaller pie radius
+            center: ['50%', '50%'],
             data: [...questions_overview_costOptimization],
             label: {
-              formatter: '{b}: ({d}%)'  // Show only the value
+              formatter: '{d}%'  // Show only the value
             }
           }
         ]
@@ -338,8 +378,12 @@ order by name
   <ECharts config={
       {
         title: {
-          text: 'Sustainability',
-          left: 'center'
+          text: 'Total Risk - Sustainability',
+          left: 'left'
+        },
+        legend: {
+          show: true,
+          bottom: 'left',
         },
         tooltip: {
             formatter: '{b}: {c} ({d}%)'
@@ -347,8 +391,12 @@ order by name
         series: [
           {
             type: 'pie',
-            radius: ['40%', '70%'],
+            radius: ['25%', '50%'],  // Smaller pie radius
+            center: ['50%', '50%'],
             data: [...questions_overview_sustainability],
+            label: {
+              formatter: '{d}%'  // Show only the value
+            }
           }
         ]
       }

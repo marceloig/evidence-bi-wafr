@@ -56,6 +56,10 @@ order by a.risk
 
 <ECharts config={
     {
+      title: {
+        text: 'Total Risk',
+        left: 'left'
+      },
       toolbox: {
         show: true,
         feature: {
@@ -111,7 +115,8 @@ group by m.recorded_at, a.risk
 order by a.risk
 ```
 
-<BarChart 
+<BarChart
+    title="Remediations Over Time"
     data={questions_overview_remediation}
     x=recorded_at
     y=value
@@ -177,7 +182,7 @@ WHERE lens_alias = 'wellarchitected'
     defaultValue="HIGH"
 />
 
-<DataTable data={base_action_plan} search=true wrapTitles=true rowShading=true groupBy=question_title groupsOpen=false>
+<DataTable title="Base Action Plan" data={base_action_plan} search=true wrapTitles=true rowShading=true groupBy=question_title groupsOpen=false>
 <Column id=question_title />
 <Column id=description />
 <Column id=best_practice />
