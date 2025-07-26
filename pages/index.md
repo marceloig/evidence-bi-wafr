@@ -90,7 +90,7 @@ order by a.risk
 
 ```sql questions_overview_remediation
 select
-  m.recorded_at,
+  date_trunc('day', m.recorded_at) as recorded_at,
   case a.risk
     when 'HIGH'
     then 'High Risk'
