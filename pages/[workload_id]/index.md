@@ -1,15 +1,7 @@
 ---
-title: WAFR
-description: AWS Well-Architected Framework Review Report.
+title: WAFR - Overview
+description: Overview of AWS Well-Architected Framework Review.
 ---
-<Grid cols=3>
-<BigLink url='{inputs.workload_id.value}/operationalExcellence'>Operational Excellence</BigLink>
-<BigLink url='{inputs.workload_id.value}/security'>Security</BigLink>
-<BigLink url='{inputs.workload_id.value}/reliability'>Reliability</BigLink>
-<BigLink url='{inputs.workload_id.value}/performance'>Performance Efficiency</BigLink>
-<BigLink url='{inputs.workload_id.value}/costOptimization'>Cost Optimization</BigLink>
-<BigLink url='{inputs.workload_id.value}/sustainability'>Sustainability</BigLink>
-</Grid>
 
 ```sql workload
 select 
@@ -19,16 +11,20 @@ from steampipe.aws_wellarchitected_answer as a
 inner join steampipe.aws_wellarchitected_workload as w
 on a.workload_id = w.workload_id
 where a.lens_alias = 'wellarchitected'
+and a.workload_id = '${params.workload_id}'
 
 ```
 
-<Dropdown
-    name=workload_id
-    data={workload}
-    value=workload_id
-    label=workload_name
-/>
-<Info description="Workload" />
+<Grid cols=3>
+<BigLink url='operationalExcellence'>Operational Excellence</BigLink>
+<BigLink url='security'>Security</BigLink>
+<BigLink url='reliability'>Reliability</BigLink>
+<BigLink url='performance'>Performance Efficiency</BigLink>
+<BigLink url='costOptimization'>Cost Optimization</BigLink>
+<BigLink url='sustainability'>Sustainability</BigLink>
+</Grid>
+
+# <Value data={workload} column=workload_name />
 
 ```sql questions_overview_risk
 select 
@@ -49,7 +45,7 @@ from steampipe.aws_wellarchitected_answer as a
 inner join steampipe.aws_wellarchitected_workload as w
 on a.workload_id = w.workload_id
 where a.lens_alias = 'wellarchitected'
-and a.workload_id = '${inputs.workload_id.value}'
+and a.workload_id = '${params.workload_id}'
 group by a.risk
 order by a.risk
 ```
@@ -90,7 +86,7 @@ order by a.risk
 
 ```sql questions_overview_remediation
 select
-  m.recorded_at,
+  date_trunc('day', m.recorded_at) as recorded_at,
   case a.risk
     when 'HIGH'
     then 'High Risk'
@@ -103,23 +99,23 @@ select
     when 'UNANSWERED'
     then 'Unanswered' else 'Others status'
   end as risk_description,
-  count(*) as value
+  count(*) as total
 from
   steampipe.aws_wellarchitected_milestone as m
 left join steampipe.aws_wellarchitected_workload as w
 on m.workload_id = w.workload_id
 left join steampipe.aws_wellarchitected_answer as a
 on a.workload_id = w.workload_id
-WHERE a.workload_id = '${inputs.workload_id.value}'
+WHERE a.workload_id = '${params.workload_id}'
 group by m.recorded_at, a.risk
-order by a.risk
+order by m.recorded_at, a.risk
 ```
 
 <BarChart
     title="Remediations Over Time"
     data={questions_overview_remediation}
     x=recorded_at
-    y=value
+    y=total
     series=risk_description
 />
 
@@ -156,7 +152,7 @@ WITH choices_all AS (
     FROM steampipe.aws_wellarchitected_answer AS a
     CROSS JOIN UNNEST(json_extract(a.choices, '$[*]')) AS t(choice_obj)
     WHERE a.lens_alias = 'wellarchitected'
-      AND a.workload_id = '${inputs.workload_id.value}'
+      AND a.workload_id = '${params.workload_id}'
 )
 SELECT a.question_title,
        cti.description,
@@ -171,7 +167,7 @@ LEFT JOIN csv.aws_wellarchitected_question_choices AS aqc ON cti.choice_id = aqc
 INNER JOIN steampipe.aws_wellarchitected_workload AS w ON a.workload_id = w.workload_id
 WHERE lens_alias = 'wellarchitected'
   AND cti.title <> 'None of these'
-  AND a.workload_id = '${inputs.workload_id.value}'
+  AND a.workload_id = '${params.workload_id}'
   AND a.risk = '${inputs.risk.value}'
 ```
 <Dropdown

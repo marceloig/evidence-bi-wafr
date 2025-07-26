@@ -6,15 +6,10 @@ from steampipe.aws_wellarchitected_answer as a
 inner join steampipe.aws_wellarchitected_workload as w
 on a.workload_id = w.workload_id
 where a.lens_alias = 'wellarchitected'
+and a.workload_id = '${params.workload_id}'
 
 ```
-
-<Dropdown
-    name=workload_id
-    data={workload}
-    value=workload_id
-    label=workload_name
-/>
+# <Value data={workload} column=workload_name />
 
 ```sql questions_overview_risk
 select 
@@ -35,7 +30,7 @@ from steampipe.aws_wellarchitected_answer as a
 inner join steampipe.aws_wellarchitected_workload as w
 on a.workload_id = w.workload_id
 where a.lens_alias = 'wellarchitected'
-and a.workload_id = '${inputs.workload_id.value}'
+and a.workload_id = '${params.workload_id}'
 and pillar_id = '${params.pillar_id}'
 group by a.risk
 order by a.risk
@@ -65,7 +60,7 @@ actual_counts AS (
     from steampipe.aws_wellarchitected_answer as a
     where a.lens_alias = 'wellarchitected'
     and pillar_id = 'sustainability'
-    and a.workload_id = '${inputs.workload_id.value}'
+    and a.workload_id = '${params.workload_id}'
   )
   group by risk
 )
@@ -153,7 +148,7 @@ ORDER BY
 
 ```sql questions_overview_remediation
 select
-  m.recorded_at,
+  date_trunc('day', m.recorded_at) as recorded_at,
   case a.risk
     when 'HIGH'
     then 'High Risk'
@@ -173,7 +168,7 @@ left join steampipe.aws_wellarchitected_workload as w
 on m.workload_id = w.workload_id
 left join steampipe.aws_wellarchitected_answer as a
 on a.workload_id = w.workload_id
-WHERE a.workload_id = '${inputs.workload_id.value}'
+WHERE a.workload_id = '${params.workload_id}'
 and pillar_id = '${params.pillar_id}'
 group by m.recorded_at, a.risk
 order by a.risk
@@ -222,7 +217,7 @@ WITH choices_all AS (
     FROM steampipe.aws_wellarchitected_answer AS a
     CROSS JOIN UNNEST(json_extract(a.choices, '$[*]')) AS t(choice_obj)
     WHERE a.lens_alias = 'wellarchitected'
-      AND a.workload_id = '${inputs.workload_id.value}'
+      AND a.workload_id = '${params.workload_id}'
 )
 SELECT a.question_title,
        cti.description,
@@ -237,7 +232,7 @@ LEFT JOIN csv.aws_wellarchitected_question_choices AS aqc ON cti.choice_id = aqc
 INNER JOIN steampipe.aws_wellarchitected_workload AS w ON a.workload_id = w.workload_id
 WHERE lens_alias = 'wellarchitected'
   AND cti.title <> 'None of these'
-  AND a.workload_id = '${inputs.workload_id.value}'
+  AND a.workload_id = '${params.workload_id}'
   AND pillar_id = '${params.pillar_id}'
   AND a.risk = '${inputs.risk.value}'
 ```
