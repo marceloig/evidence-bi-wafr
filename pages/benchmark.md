@@ -1,5 +1,5 @@
 ---
-title: Benchmark
+title: Well-Architected Framework Review Report - Benchmark
 ---
 
 ```sql questions_overview_risk
