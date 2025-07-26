@@ -18,23 +18,28 @@ where a.lens_alias = 'wellarchitected'
 
 ```sql questions_overview_risk
 select 
-    case a.risk 
-        when 'HIGH' then 'High Risk' 
-        when 'MEDIUM' then 'Medium Risk' 
-        when 'NONE' then 'Resolved' 
-        when 'NOT_APPLICABLE' then 'Not Applicable' 
-        when 'UNANSWERED' then 'Unanswered' 
-        else 'Others status' 
-    end as name, 
-    count(*) as value 
-    from steampipe.aws_wellarchitected_answer as a 
-    inner join steampipe.aws_wellarchitected_workload as w 
-        on a.workload_id = w.workload_id 
-    where a.lens_alias = 'wellarchitected' 
-        and pillar_id = 'operationalExcellence' 
-        and a.workload_id = '${inputs.workload_id.value}' 
-    group by a.risk
-    order by a.risk
+  case a.risk
+      when 'HIGH'
+      then 'High Risk'
+      when 'MEDIUM'
+      then 'Medium Risk'
+      when 'NONE'
+      then 'Resolved'
+      when 'NOT_APPLICABLE'
+      then 'Not Applicable'
+      when 'UNANSWERED'
+      then 'Unanswered' else 'Others status'
+  end as name, 
+  count(*) as value
+from steampipe.aws_wellarchitected_answer as a
+inner join steampipe.aws_wellarchitected_workload as w
+on a.workload_id = w.workload_id
+where a.lens_alias = 'wellarchitected'
+and a.workload_id = '${inputs.workload_id.value}'
+and pillar_id = '${params.pillar_id}'
+group by a.risk
+order by a.risk
+
 ```
 
 <ECharts config={
@@ -75,10 +80,10 @@ left join steampipe.aws_wellarchitected_workload as w
 on m.workload_id = w.workload_id
 left join steampipe.aws_wellarchitected_answer as a
 on a.workload_id = w.workload_id
-where pillar_id = '${params.pillar_id}'
-and a.workload_id = '${inputs.workload_id.value}'
+WHERE a.workload_id = '${inputs.workload_id.value}'
+and pillar_id = '${params.pillar_id}'
 group by m.recorded_at, a.risk
-order by risk_description
+order by a.risk
 ```
 
 <BarChart 
@@ -87,6 +92,25 @@ order by risk_description
     y=value
     series=risk_description
 />
+
+```sql risk_description
+select
+  a.risk,
+  case a.risk
+    when 'HIGH'
+    then 'High Risk'
+    when 'MEDIUM'
+    then 'Medium Risk'
+    when 'NONE'
+    then 'Resolved'
+    when 'NOT_APPLICABLE'
+    then 'Not Applicable'
+    when 'UNANSWERED'
+    then 'Unanswered' else 'Others status'
+  end as risk_description
+from steampipe.aws_wellarchitected_answer as a
+group by a.risk
+```
 
 ```sql base_action_plan
 WITH choices_all AS (
@@ -105,29 +129,36 @@ WITH choices_all AS (
       AND a.workload_id = '${inputs.workload_id.value}'
 )
 SELECT a.question_title,
-       CASE a.risk
-           WHEN 'HIGH' THEN 'High Risk'
-           WHEN 'MEDIUM' THEN 'Medium Risk'
-           WHEN 'NONE' THEN 'Resolved'
-           WHEN 'NOT_APPLICABLE' THEN 'Not Applicable'
-           WHEN 'UNANSWERED' THEN 'Unanswered' 
-           ELSE 'Others status'
-       END AS risk_description,
-       cti.additional_resources,
-       cti.choice_id,
        cti.description,
-       cti.title
-       --aqc.risk AS risk_choice,
-       --aqc.complexity,
-       --aqc.duration,
-       --aqc.improvement_plan
+       cti.title AS best_practice,
+       aqc.risk AS best_practice_risk,
+       aqc.Complexity,
+       aqc.Duration,
+       aqc.Improvement_Plan
 FROM steampipe.aws_wellarchitected_answer AS a
 INNER JOIN choices_all AS cti ON a.workload_id = cti.workload_id AND a.question_id = cti.question_id
--- LEFT JOIN aws_wellarchitected_question_choices AS aqc ON cti.choice_id = aqc.choice_id
+LEFT JOIN csv.aws_wellarchitected_question_choices AS aqc ON cti.choice_id = aqc.choice_id
 INNER JOIN steampipe.aws_wellarchitected_workload AS w ON a.workload_id = w.workload_id
 WHERE lens_alias = 'wellarchitected'
-  and a.workload_id = '${inputs.workload_id.value}'
-  and pillar_id = '${params.pillar_id}'
+  AND cti.title <> 'None of these'
+  AND a.workload_id = '${inputs.workload_id.value}'
+  AND pillar_id = '${params.pillar_id}'
+  AND a.risk = '${inputs.risk.value}'
 ```
+<Dropdown
+    name=risk
+    data={risk_description}
+    value=risk
+    label=risk_description
+    defaultValue="HIGH"
+/>
 
-<DataTable data={base_action_plan} search=true wrapTitles=true rowShading=true groupBy=question_title groupsOpen=false />
+<DataTable data={base_action_plan} search=true wrapTitles=true rowShading=true sortable=true groupBy=question_title groupsOpen=false>
+<Column id=question_title />
+<Column id=description />
+<Column id=best_practice />
+<Column id=best_practice_risk />
+<Column id=Complexity />
+<Column id=Duration />
+<Column id=Improvement_Plan contentType=link linkLabel=Improvement_Plan />
+</DataTable>
