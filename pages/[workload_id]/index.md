@@ -7,8 +7,8 @@ description: Overview of AWS Well-Architected Framework Review.
 select 
     w.workload_id,
     w.workload_name
-from steampipe.aws_wellarchitected_answer as a
-inner join steampipe.aws_wellarchitected_workload as w
+from camarim.aws_wellarchitected_answer as a
+inner join camarim.aws_wellarchitected_workload as w
 on a.workload_id = w.workload_id
 where a.lens_alias = 'wellarchitected'
 and a.workload_id = '${params.workload_id}'
@@ -41,8 +41,8 @@ select
       then 'Unanswered' else 'Others status'
   end as name, 
   count(*) as value
-from steampipe.aws_wellarchitected_answer as a
-inner join steampipe.aws_wellarchitected_workload as w
+from camarim.aws_wellarchitected_answer as a
+inner join camarim.aws_wellarchitected_workload as w
 on a.workload_id = w.workload_id
 where a.lens_alias = 'wellarchitected'
 and a.workload_id = '${params.workload_id}'
@@ -101,10 +101,10 @@ select
   end as risk_description,
   count(*) as total
 from
-  steampipe.aws_wellarchitected_milestone as m
-left join steampipe.aws_wellarchitected_workload as w
+  camarim.aws_wellarchitected_milestone as m
+left join camarim.aws_wellarchitected_workload as w
 on m.workload_id = w.workload_id
-left join steampipe.aws_wellarchitected_answer as a
+left join camarim.aws_wellarchitected_answer as a
 on a.workload_id = w.workload_id
 WHERE a.workload_id = '${params.workload_id}'
 group by m.recorded_at, a.risk
@@ -134,7 +134,7 @@ select
     when 'UNANSWERED'
     then 'Unanswered' else 'Others status'
   end as risk_description
-from steampipe.aws_wellarchitected_answer as a
+from camarim.aws_wellarchitected_answer as a
 group by a.risk
 ```
 
@@ -149,7 +149,7 @@ WITH choices_all AS (
         json_extract_string(choice_obj, 'HelpfulResource') AS HelpfulResource,
         json_extract_string(choice_obj, 'ImprovementPlan') AS ImprovementPlan,
         json_extract_string(choice_obj, 'Title') AS title
-    FROM steampipe.aws_wellarchitected_answer AS a
+    FROM camarim.aws_wellarchitected_answer AS a
     CROSS JOIN UNNEST(json_extract(a.choices, '$[*]')) AS t(choice_obj)
     WHERE a.lens_alias = 'wellarchitected'
       AND a.workload_id = '${params.workload_id}'
@@ -161,10 +161,10 @@ SELECT a.question_title,
        aqc.Complexity,
        aqc.Duration,
        aqc.Improvement_Plan
-FROM steampipe.aws_wellarchitected_answer AS a
+FROM camarim.aws_wellarchitected_answer AS a
 INNER JOIN choices_all AS cti ON a.workload_id = cti.workload_id AND a.question_id = cti.question_id
 LEFT JOIN csv.aws_wellarchitected_question_choices AS aqc ON cti.choice_id = aqc.choice_id
-INNER JOIN steampipe.aws_wellarchitected_workload AS w ON a.workload_id = w.workload_id
+INNER JOIN camarim.aws_wellarchitected_workload AS w ON a.workload_id = w.workload_id
 WHERE lens_alias = 'wellarchitected'
   AND cti.title <> 'None of these'
   AND a.workload_id = '${params.workload_id}'

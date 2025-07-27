@@ -18,8 +18,8 @@ select
       then 'Unanswered' else 'Others status'
   end as name, 
   count(*) as value
-from steampipe.aws_wellarchitected_answer as a
-inner join steampipe.aws_wellarchitected_workload as w
+from camarim.aws_wellarchitected_answer as a
+inner join camarim.aws_wellarchitected_workload as w
 on a.workload_id = w.workload_id
 where a.lens_alias = 'wellarchitected'
 group by a.risk
@@ -80,7 +80,7 @@ select
 		when 'NOT_APPLICABLE' then 'Not Applicable'
 		when 'UNANSWERED' then 'Unanswered' else 'Others status'
 	end as risk_description
-from steampipe.aws_wellarchitected_answer as a
+from camarim.aws_wellarchitected_answer as a
 where a.lens_alias = 'wellarchitected'
 ```
 <DataTable data={questions_overview} search=true/>
@@ -100,7 +100,7 @@ select
       then 'Unanswered' else 'Others status'
   end as risk, 
   a.pillar_id
-from steampipe.aws_wellarchitected_answer as a
+from camarim.aws_wellarchitected_answer as a
 where a.lens_alias = 'wellarchitected'
 order by a.risk
 ```

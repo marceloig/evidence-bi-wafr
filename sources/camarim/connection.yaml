@@ -1,0 +1,14 @@
+# This file was automatically generated
+type: postgres
+name: camarim
+options:
+  database: lgrybd
+  host: marceloig-camarim.usea1.db.pipes.turbot.com
+  port: 9193
+  schema: aws
+  ssl:
+    rejectUnauthorized: true
+  _ssl: true
+# Advanced Options, you probably don't want to change this
+buildOptions:
+  batchSize: 1000000
