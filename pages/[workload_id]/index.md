@@ -170,6 +170,8 @@ WHERE lens_alias = 'wellarchitected'
   AND a.workload_id = '${params.workload_id}'
   AND a.risk = '${inputs.risk.value}'
 ```
+<LineBreak/>
+
 <Dropdown
     name=risk
     data={risk_description}

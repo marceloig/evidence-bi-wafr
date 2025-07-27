@@ -122,6 +122,7 @@ from ${questions_overview_pillar_id}
 where pillar_id = 'security'
 group by risk
 ```
+<LineBreak/>
 
 <Grid cols=2>
   <ECharts config={
@@ -219,6 +220,8 @@ from ${questions_overview_pillar_id}
 where pillar_id = 'performance'
 group by risk
 ```
+
+<LineBreak/>
 
 <Grid cols=2>
   <ECharts config={
@@ -336,6 +339,7 @@ ORDER BY
   END
 
 ```
+<LineBreak/>
 
 <Grid cols=2>
   <ECharts config={

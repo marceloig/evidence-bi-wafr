@@ -236,6 +236,8 @@ WHERE lens_alias = 'wellarchitected'
   AND pillar_id = '${params.pillar_id}'
   AND a.risk = '${inputs.risk.value}'
 ```
+<LineBreak/>
+
 <Dropdown
     name=risk
     data={risk_description}
