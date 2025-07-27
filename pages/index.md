@@ -2,23 +2,6 @@
 title: WAFR
 description: AWS Well-Architected Framework Review Report.
 ---
-<script>
-  (function(n,i,v,r,s,c,x,z){x=window.AwsRumClient={q:[],n:n,i:i,v:v,r:r,c:c};window[n]=function(c,p){x.q.push({c:c,p:p});};z=document.createElement('script');z.async=true;z.src=s;document.head.insertBefore(z,document.head.getElementsByTagName('script')[0]);})(
-    'cwr',
-    '6d8747da-973b-40a9-8861-748acf2d6b1d',
-    '1.0.0',
-    'us-east-2',
-    'https://client.rum.us-east-1.amazonaws.com/1.19.0/cwr.js',
-    {
-      sessionSampleRate: 1 ,
-      endpoint: "https://dataplane.rum.us-east-2.amazonaws.com" ,
-      telemetries: ["performance","errors","http"] ,
-      allowCookies: true ,
-      enableXRay: false ,
-      signing: false // If you have a public resource policy and wish to send unsigned requests please set this to false
-    }
-  );
-</script>
 
 <Grid cols=3>
 <BigLink url='{inputs.workload_id.value}/operationalExcellence'>Operational Excellence</BigLink>
